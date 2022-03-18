@@ -1,4 +1,3 @@
-
 calcul :                
 // * x = %sp+1, y = %sp+2 *
     ld [%sp+1],%a       // a <-- x
