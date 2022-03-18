@@ -79,7 +79,7 @@ tester ()
 	do
 	    echo "	$i"
 	done
-    ) > $TMP.in 
+    ) > $TMP.in
     $Z33 run $TMP.in test > $TMP.1 2> $TMP.2 \
 	|| fail "erreur sur '$label' => regarder $TMP.in, $TMP.1 et $TMP.2"
 }
