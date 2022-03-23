@@ -7,12 +7,12 @@ calcul :
     mul 2,%b            // b <-- 2y
     sub %a,%b           // b <-- 2y-x
     mul -1,%b           // b <-- x-2y
-    mul %b,%a           // a <-- x²-2xy
+    mul %b,%a           // a <-- x*x-2xy
 
     ld [%sp+3],%b       // b <-- y
-    mul %b,%b           // b <--y²
+    mul %b,%b           // b <--y*y
 
-    sub %b,%a           // a <-- x²-2xy-y²
+    sub %b,%a           // a <-- x*x-2xy-y*y
     pop %b              // restore B
 
     rtn
@@ -59,9 +59,9 @@ racine :
     jmp check_while
 
 b2: ld %b,%a        // a <-- r
-    mul %a,%a       // a<--r²
-    cmp [%sp+4],%a  //compare r² and n
-    jlt b3          // if r²>n go to b3
+    mul %a,%a       // a<--r*r
+    cmp [%sp+4],%a  //compare r*r and n
+    jlt b3          // if r*r>n go to b3
 //the "else" case
     st %b,[%sp+1]   // inf = r
     jmp b1          // go to b1
@@ -77,14 +77,14 @@ b1: ld [%sp],%b     // b = r = sup
 
 //check the while statement
 check_while: ld %b,%a        // a <-- r
-             mul %a,%a       // a<--r²
-             cmp [%sp+4],%a  // compare r² and n
-             jlt b2          // if r²>n go to b2
+             mul %a,%a       // a<--r*r
+             cmp [%sp+4],%a  // compare r*r and n
+             jlt b2          // if r*r>n go to b2
              ld %b,%a        // a <-- r
              add 1,%a        // a <-- r+1
-             mul %a,%a       // a <-- (r+1)²
-             cmp [%sp+4],%a  //compare (r+1)² and n
-             jge b2          // if (r+1)²<=n go to b2
+             mul %a,%a       // a <-- (r+1)*(r+1)
+             cmp [%sp+4],%a  //compare (r+1)*(r+1) and n
+             jge b2          // if (r+1)*(r+1)<=n go to b2
              ld %b,%a        // a <-- result
              add 2,%sp       // restore SP
              pop %b          //restore B
