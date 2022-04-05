@@ -18,6 +18,13 @@
             raler(1, #op); \
     } while (0)
 
+#define TCHK(op)                 \
+    do                           \
+    {                            \
+        if ((errno = (op)) != 0) \
+            raler(1, #op);       \
+    } while (0)
+
 noreturn void raler(int syserr, const char *msg, ...)
 {
     va_list ap;
