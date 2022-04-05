@@ -18,11 +18,11 @@
             raler(1, #op); \
     } while (0)
 
-#define TCHK(op)                 \
-    do                           \
-    {                            \
-        if ((errno = (op)) != 0) \
-            raler(1, #op);       \
+#define TCHK(op)                \
+    do                          \
+    {                           \
+        if ((errno = (op)) > 0) \
+            raler(1, #op);      \
     } while (0)
 
 noreturn void raler(int syserr, const char *msg, ...)
@@ -45,7 +45,7 @@ struct pthread_thread_arg
     int p;
     int n;
     int i;
-    char **string;
+    char *string;
     pthread_barrier_t *bar;
 };
 
@@ -57,28 +57,28 @@ void *start_routine(void *arg)
     int p = thread_arg->p;
     int n = thread_arg->n;
     int i = thread_arg->i;
-    char **string = thread_arg->string;
+    char *string = thread_arg->string;
 
     for (int j = 0; j < p; j++)
     {
-        if (p % 2 == 0)
+        if (j % 2 == 0)
         {
-            *string[i] = '#';
+            string[i] = '#';
         }
         else
         {
-            *string[i] = '-';
+            string[i] = '-';
         }
         // wait for all threads to finish using barrier and print string
         pthread_barrier_wait(thread_arg->bar);
         if (i == n - 1)
-            printf("%s\n", *string);
+            printf("%s\n", string);
     }
     return NULL;
 }
 
 /**
- * @brief write alternatively n times "#"" and n times "-"" p times
+ * @brief write alternatively n times "#"" and n times "-" p times
  *
  * @param argc
  * @param argv n and p
@@ -115,8 +115,8 @@ int main(int argc, char **argv)
         threads[i].p = p;
         threads[i].n = n;
         threads[i].i = i;
-        // threads[i].string is the pointer to string
-        threads[i].string = &string;
+        // threads[i].string is the pointer to first character from string
+        threads[i].string = &string[0];
         threads[i].bar = &bar;
 
         if ((errno = pthread_create(&tid[i], NULL, start_routine, &threads[i])) > 0)
