@@ -41,7 +41,7 @@ noreturn void raler(int syserr, const char *msg, ...)
 }
 
 // create 9 semaphores
-sem_t sem[2] = {0};
+sem_t sem[2];
 
 void task(int id)
 {
