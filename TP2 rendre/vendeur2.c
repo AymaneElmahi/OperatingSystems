@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     sem_t *sem_file;
     sem_t *sem_prd;
     set_sem_file(&sem_file, argv[1], 1);
+    // set sem_prd as the name of the file with sem_set
     set_sem(&sem_prd, argv[1], 0);
-
     switch (quantite)
     {
     case 0:
@@ -31,14 +31,13 @@ int main(int argc, char *argv[])
             struct produit produit;
             int fd = open(argv[1], O_RDONLY);
             CHK(read(fd, &produit, sizeof(struct produit)));
-            // delete the file
-            close(fd);
-            CHK(unlink(argv[1]));
+            CHK(remove(argv[1]));
+            sem_post(sem_file);
+            // read file
             for (int i = 0; i <= produit.clients_waiting; i++)
             {
                 sem_post(sem_prd);
             }
-            sem_post(sem_file);
             exit(EXIT_SUCCESS);
         }
         else
@@ -55,35 +54,59 @@ int main(int argc, char *argv[])
         }
     }
 
+    // get sem value
+    // int sem_value;
+    // sem_getvalue(sem_file, &sem_value);
+    // printf("sem_file value: %d\n", sem_value);
+    // sem_getvalue(sem_prd, &sem_value);
+    // printf("sem_prd value: %d\n", sem_value);
     TCHK(sem_wait(sem_file));
+    int sem_value;
+    sem_getvalue(sem_prd, &sem_value);
+    if (sem_value > 0)
+        sem_wait(sem_prd);
 
-    int fd = open(argv[1], O_RDWR | O_CREAT, 0666);
-    struct produit produit;
+    int fd;
+    CHK(fd = open(argv[1], O_RDWR | O_CREAT, 0666));
 
-    // if the file is empty
     if (is_empty(fd))
     {
-        struct produit produit;
-        produit.quantite = quantite;
-        strcpy(produit.nom, argv[1]);
-        produit.clients_waiting = 0;
-        CHK(write(fd, &produit, sizeof(struct produit)));
+        struct produit p;
+        p.quantite = quantite;
+        strcpy(p.nom, argv[1]);
+        p.clients_waiting = 0;
+        CHK(write(fd, &p, sizeof(p)));
+        // print the new quantity on the file
+        // printf("%d", p.quantite);
     }
     else
     {
-        CHK(read(fd, &produit, sizeof(struct produit)));
-        produit.quantite += quantite;
-        CHK(ftruncate(fd, 0));
+        struct produit p;
+        CHK(read(fd, &p, sizeof(p)));
+        p.quantite += quantite;
         CHK(lseek(fd, 0, SEEK_SET));
-        CHK(write(fd, &produit, sizeof(struct produit)));
-        for (int i = 0; i <= produit.clients_waiting; i++)
-        {
-            sem_post(sem_prd);
-        }
+        CHK(write(fd, &p, sizeof(p)));
+        // print the new quantity on the file
+        printf("%d\n", p.quantite);
     }
 
-    sem_post(sem_file);
-    TCHK(sem_close(sem_prd));
-    TCHK(sem_close(sem_file));
+    TCHK(sem_post(sem_file));
+    // TCHK(sem_post(sem_file));
+    struct produit p;
+    CHK(lseek(fd, 0, SEEK_SET));
+    CHK(read(fd, &p, sizeof(p)));
+    for (int i = 0; i <= p.clients_waiting; i++)
+        TCHK(sem_post(sem_prd));
+
+    CHK(close(fd));
+
+    // get sem value
+    sem_getvalue(sem_file, &sem_value);
+    printf("sem_file value: %d\n", sem_value);
+    sem_getvalue(sem_prd, &sem_value);
+    printf("sem_prd value: %d\n", sem_value);
+
+    CHK(sem_close(sem_file));
+    CHK(sem_close(sem_prd));
     return 0;
 }

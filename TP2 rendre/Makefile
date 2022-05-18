@@ -10,7 +10,7 @@
 #		  sur Moodle
 #
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror 
 LDLIBS = -g -lpthread -lrt
 
 # Les fichiers attendus pour le rendu sur le devoir Moodle

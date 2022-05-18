@@ -147,6 +147,8 @@ ps_existe $PID "Le troisième client devrait être en train d'attendre"
 # pour l'instant, on ne s'intéresse pas encore à la terminaison
 # et on s'arrête comme des malpropres
 
+rm -r -f /dev/shm/sem.*
+
 echo OK
 
 ##############################################################################
@@ -181,6 +183,7 @@ wait $PID                              || fail "erreur client 3, cf $TMP.cerr3"
 
 # pour l'instant, on ne s'intéresse pas encore à la terminaison
 # et on s'arrête comme des malpropres
+rm -r -f /dev/shm/sem.*
 
 echo OK
 
@@ -236,6 +239,7 @@ wait $PID4                            || fail "erreur client 4, cf $TMP.cerr4"
 
 # pour l'instant, on ne s'intéresse pas encore à la terminaison
 # et on s'arrête comme des malpropres
+rm -r -f /dev/shm/sem.*
 
 echo OK
 
@@ -270,6 +274,8 @@ ps_existe $PID "Le troisième client devrait être en train d'attendre"
 msleep 100
 ps_termine $PID "Le troisième client devrait être rentré chez lui"
 wait $PID                             && fail "le 3e client devrait exit(1)"
+
+rm -r -f /dev/shm/sem.*
 
 echo OK
 
@@ -310,6 +316,7 @@ do
     wait $pid                         && fail "le client $i devrait exit(1)"
     i=$((i+1))
 done
+rm -r -f /dev/shm/sem.*
 
 echo OK
 
@@ -357,6 +364,8 @@ wait $PID3                            || fail "le client 3 devrait exit(0)"
 # Le deuxième vendeur ferme lui aussi boutique
 ./vendeur PROD2 0 2> $TMP.verr4       || fail "erreur départ vendeur 2"
 
+rm -r -f /dev/shm/sem.*
+
 echo OK
 
 ##############################################################################
@@ -386,6 +395,7 @@ ps_existe $PID "Le client numéro $((N+1)) devrait attendre"
 msleep 100
 ps_termine $PID "Le client numéro $((N+1)) devrait être terminé"
 wait $PID                             || fail "client $((N+1)) en erreur"
+rm -r -f /dev/shm/sem.*
 
 echo OK
 
@@ -417,6 +427,8 @@ do
 done
 
 ./vendeur PROD1 0 2> $TMP.verr-fin  || fail "erreur départ vendeur"
+
+rm -r -f /dev/shm/sem.*
 
 echo OK
 

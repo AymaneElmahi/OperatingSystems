@@ -1,4 +1,5 @@
 // Fichier lib.h à rédiger
+#pragma once
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,14 +36,59 @@
             raler(1, #op);      \
     } while (0)
 noreturn void raler(int syserr, const char *msg, ...);
-int is_empty(int fd);
 
+/**
+ * @brief structure to store a product
+ */
 struct produit
 {
     char nom[20];
     int quantite;
+    int clients_waiting;
 };
 
-// set the named semaphore function
+/**
+ * @brief check if a file is empty
+ *
+ * @param fd  file descriptor
+ * @return int  1 if empty, 0 if not
+ */
+int is_empty(int fd);
 
-sem_t *set_sem(char *name, int value);
+/**
+ * @brief Set the semaphore to a signal that we added a product
+ *
+ * @param sem
+ * @param name
+ * @param value
+ * @return sem_t*
+ */
+sem_t *set_sem(sem_t **sem, char *name, int value);
+
+/**
+ * @brief Set the semaphore to protect the file
+ *
+ * @param sem
+ * @param name
+ * @param value
+ * @return sem_t*
+ */
+sem_t *set_sem_file(sem_t **sem, char *name, int value);
+
+/**
+ * @brief  group products in the array
+ *
+ * @param products
+ * @param argv
+ * @param nb
+ * @return int
+ */
+int group_products(struct produit *products, char *argv[], int nb);
+
+/**
+ * @brief  check if a file exists
+ *
+ * @param file
+ * @return int
+ */
+int file_exists(char *file);
