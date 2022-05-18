@@ -23,6 +23,10 @@ int main(int argc, char *argv[])
     }
 
     struct produit *produits = malloc(sizeof(struct produit));
+    if (produits == NULL)
+    {
+        raler(1, "malloc");
+    }
     strcpy(produits[0].nom, argv[1]);
     produits[0].quantite = atoi(argv[2]);
     int nb_prod = group_products(produits, argv, argc);
@@ -33,7 +37,6 @@ int main(int argc, char *argv[])
         sem_t *sem_prd;
         set_sem_file(&sem_file, produits[i].nom, 0);
         set_sem(&sem_prd, produits[i].nom, 0);
-
         TCHK(sem_wait(sem_file));
 
         int fd;

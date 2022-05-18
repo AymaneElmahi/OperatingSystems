@@ -29,16 +29,17 @@ int main(int argc, char *argv[])
         {
             // read the file
             struct produit produit;
-            int fd = open(argv[1], O_RDONLY);
+            int fd;
+            CHK(fd = open(argv[1], O_RDONLY));
             CHK(read(fd, &produit, sizeof(struct produit)));
             // delete the file
-            close(fd);
+            CHK(close(fd));
             CHK(unlink(argv[1]));
             for (int i = 0; i <= produit.clients_waiting; i++)
             {
-                sem_post(sem_prd);
+                TCHK(sem_post(sem_prd));
             }
-            sem_post(sem_file);
+            TCHK(sem_post(sem_file));
             exit(EXIT_SUCCESS);
         }
         else
@@ -78,11 +79,11 @@ int main(int argc, char *argv[])
         CHK(write(fd, &produit, sizeof(struct produit)));
         for (int i = 0; i <= produit.clients_waiting; i++)
         {
-            sem_post(sem_prd);
+            TCHK(sem_post(sem_prd));
         }
     }
 
-    sem_post(sem_file);
+    TCHK(sem_post(sem_file));
     TCHK(sem_close(sem_prd));
     TCHK(sem_close(sem_file));
     return 0;
