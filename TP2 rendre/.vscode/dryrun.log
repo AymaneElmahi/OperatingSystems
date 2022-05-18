@@ -1,5 +1,9 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/aymane/OperatingSystems/TP2 rendre'
-make: Nothing to be done for 'all'.
+cc -g -Wall -Wextra -Werror   -c -o client.o client.c
+cc -g -Wall -Wextra -Werror   -c -o lib.o lib.c
+cc   client.o lib.o  -g -lpthread -lrt -o client
+cc -g -Wall -Wextra -Werror   -c -o vendeur.o vendeur.c
+cc   vendeur.o lib.o  -g -lpthread -lrt -o vendeur
 make: Leaving directory '/home/aymane/OperatingSystems/TP2 rendre'
  

@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed May 18 14:46:56 2022
+# Make data base, printed on Wed May 18 14:51:40 2022
 
 # Variables
 
@@ -63,7 +63,7 @@ DEVOIR = lib.c lib.h client.c vendeur.c
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-ecc9b68d-1001-4668-8ae7-6f90d924496a.sock
+VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-b51b0670-91ab-44c6-8aa6-bcfedd3674e7.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -103,7 +103,7 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 MAKELEVEL := 0
 # environment
-PLATFORMIO_PATH = /home/aymane/.platformio/penv/bin:/home/aymane/.platformio/penv:/home/aymane/.platformio/python3/bin:/home/aymane/.vscode-server/bin/da15b6fd3ef856477bf6f4fb29ba1b7af717770d/bin/remote-cli:/home/aymane/.local/bin:/home/aymane/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Intel/WiFi/bin/:/mnt/c/Program Files/Common Files/Intel/WirelessCommon/:/mnt/c/Program Files (x86)/Python39-12:/mnt/c/Coq/bin:/mnt/c/Program Files/MATLAB/R2021b/bin/win64:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/MATLAB/R2021b/extern/bin/win64:/mnt/c/Users/Aymane/AppData/Local/Programs/Python/Python39/Scripts/:/mnt/c/Users/Aymane/AppData/Local/Programs/Python/Python39/:/mnt/c/Users/Aymane/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Firefox_Extension/{442718d9-475e-452a-b3e1-fb1ee16b8e9f}/components:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/ucrt:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Qt:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Ssl:/mnt/c/Users/Aymane/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Aymane/AppData/Local/Programs/Microsoft VS Code Insiders/bin:/snap/bin
+PLATFORMIO_PATH = /home/aymane/.platformio/python3/bin:/home/aymane/.vscode-server/bin/da15b6fd3ef856477bf6f4fb29ba1b7af717770d/bin/remote-cli:/home/aymane/.local/bin:/home/aymane/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Intel/WiFi/bin/:/mnt/c/Program Files/Common Files/Intel/WirelessCommon/:/mnt/c/Program Files (x86)/Python39-12:/mnt/c/Coq/bin:/mnt/c/Program Files/MATLAB/R2021b/bin/win64:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/MATLAB/R2021b/extern/bin/win64:/mnt/c/Users/Aymane/AppData/Local/Programs/Python/Python39/Scripts/:/mnt/c/Users/Aymane/AppData/Local/Programs/Python/Python39/:/mnt/c/Users/Aymane/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Firefox_Extension/{442718d9-475e-452a-b3e1-fb1ee16b8e9f}/components:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/ucrt:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Qt:/mnt/c/Users/Aymane/AppData/Roaming/Dashlane/6.2018.0.34867/bin/Ssl:/mnt/c/Users/Aymane/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Aymane/AppData/Local/Programs/Microsoft VS Code Insiders/bin:/snap/bin
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -183,9 +183,9 @@ WSL_DISTRO_NAME = Ubuntu-20.04
 
 # Directories
 
-# . (device 2080, inode 105106): 18 files, no impossibilities.
+# . (device 2080, inode 105106): 13 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -214,7 +214,7 @@ client.o: lib.h
 
 client: lib.o
 #  Implicit rule search has been done.
-#  Last modified 2022-05-18 14:43:03.0115284
+#  File does not exist.
 #  File has been updated.
 #  Successfully updated.
 
@@ -225,7 +225,7 @@ vendeur.o: lib.h
 
 vendeur: lib.o
 #  Implicit rule search has been done.
-#  Last modified 2022-05-18 14:43:03.5415284
+#  File does not exist.
 #  File has been updated.
 #  Successfully updated.
 
@@ -251,7 +251,7 @@ client.c:
 
 lib.o: lib.h
 #  Implicit rule search has been done.
-#  Last modified 2022-05-18 14:43:02.5215284
+#  File does not exist.
 #  File has been updated.
 #  Successfully updated.
 
@@ -279,7 +279,6 @@ clean:
 	rm -f devoir.tgz
 
 devoir.tgz: lib.c lib.h client.c vendeur.c
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -307,12 +306,12 @@ lib.c:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 27 / storage = 226 B / avg = 8 B
-# current buf: size = 8162 B / used = 226 B / count = 27 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 26 / storage = 217 B / avg = 8 B
+# current buf: size = 8162 B / used = 217 B / count = 26 / avg = 8 B
 
-# strcache performance: lookups = 59 / hit rate = 54%
+# strcache performance: lookups = 54 / hit rate = 51%
 # hash-table stats:
-# Load=27/8192=0%, Rehash=0, Collisions=1/59=2%
-# Finished Make data base on Wed May 18 14:46:56 2022
+# Load=26/8192=0%, Rehash=0, Collisions=1/54=2%
+# Finished Make data base on Wed May 18 14:51:40 2022
 
  

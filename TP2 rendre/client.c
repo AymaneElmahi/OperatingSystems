@@ -2,6 +2,13 @@
 
 #include "lib.h"
 
+/*******************************************************************************
+Je pense qu'il faut ajouter 	rm -r -f /dev/shm/sem.*  à la fin de chaque test
+pour que les anciens wait et post n'influent pas sur le programme.
+
+Dans mon cas, si je le rajoute, tous les tests passent.
+*******************************************************************************/
+
 int main(int argc, char *argv[])
 {
     // verifier que le nombre d'arguments est correct
