@@ -38,6 +38,10 @@ test: $(PROGS)
 devoir.tgz: $(DEVOIR)
 	tar czvf devoir.tgz $(DEVOIR)
 
+#delete semaphores
+sem:
+	rm -r -f /dev/shm/sem.*
+
 clean:
 	rm -f *.o $(PROGS)
 	rm -f PROD*			# fichiers utilisés pour les tests

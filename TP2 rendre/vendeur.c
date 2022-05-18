@@ -2,13 +2,6 @@
 
 #include "lib.h"
 
-int is_empty(int fd)
-{
-    struct stat s;
-    CHK(fstat(fd, &s));
-    return s.st_size == 0;
-}
-
 // ./vendeur produit quantité, lire le fichier et mettre à jour la quantité
 int main(int argc, char *argv[])
 {
@@ -44,6 +37,20 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
     }
+    // use named semaphore to synchronize threads
+    sem_t *sem_file;
+    sem_t *sem_prd;
+    sem_file = sem_open("sem_file", O_CREAT, 0666, 1);
+    // set sem_prd as the name of the file with sem_set
+    sem_prd = set_sem(argv[1], 0);
+
+    // get sem value
+    // int sem_value;
+    // sem_getvalue(sem_file, &sem_value);
+    // printf("sem_file value: %d\n", sem_value);
+    // sem_getvalue(sem_prd, &sem_value);
+    // printf("sem_prd value: %d\n", sem_value);
+    // TCHK(sem_wait(sem_file));
 
     int fd;
     CHK(fd = open(argv[1], O_RDWR | O_CREAT, 0666));
@@ -53,6 +60,8 @@ int main(int argc, char *argv[])
         struct produit p;
         p.quantite = quantite;
         CHK(write(fd, &p, sizeof(p)));
+        // print the new quantity on the file
+        // printf("%d", p.quantite);
     }
     else
     {
@@ -61,5 +70,14 @@ int main(int argc, char *argv[])
         p.quantite += quantite;
         CHK(lseek(fd, 0, SEEK_SET));
         CHK(write(fd, &p, sizeof(p)));
+        // print the new quantity on the file
+        printf("%d", p.quantite);
     }
+
+    CHK(close(fd));
+    TCHK(sem_post(sem_file));
+    TCHK(sem_post(sem_prd));
+    CHK(sem_close(sem_file));
+    CHK(sem_close(sem_prd));
+    return 0;
 }

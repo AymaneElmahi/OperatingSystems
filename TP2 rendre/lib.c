@@ -15,3 +15,18 @@ noreturn void raler(int syserr, const char *msg, ...)
 
     exit(EXIT_FAILURE);
 }
+
+int is_empty(int fd)
+{
+    struct stat s;
+    CHK(fstat(fd, &s));
+    return s.st_size == 0;
+}
+
+sem_t *set_sem(char *name, int value)
+{
+    sem_t *sem;
+    sem = sem_open(name, O_CREAT, 0666, value);
+    NCHK(sem);
+    return sem;
+}

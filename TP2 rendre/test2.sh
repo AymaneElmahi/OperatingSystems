@@ -131,13 +131,13 @@ raz
 PID=$!                                          # noter son pid
 msleep 100                                      # attendre 100 ms
 ps_termine $PID "Le premier client devrait être terminé"
-wait $PID                              || fail "erreur client, cf $TMP.cerr1"
+wait $PID                              || fail "erreur client 1, cf $TMP.cerr1"
 
 ./client PROD1 1 > $TMP.cout2 2> $TMP.cerr2 &   # lancer client en arrière plan
 PID=$!                                          # noter son pid
 msleep 100                                      # attendre 100 ms
 ps_termine $PID "Le deuxième client devrait être terminé"
-wait $PID                              || fail "erreur client, cf $TMP.cerr2"
+wait $PID                              || fail "erreur client 2, cf $TMP.cerr2"
 
 ./client PROD1 1 > $TMP.cout3 2> $TMP.cerr3 &   # lancer client en arrière plan
 PID=$!                                          # noter son pid
