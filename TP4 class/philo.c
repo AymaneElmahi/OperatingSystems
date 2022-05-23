@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <stdnoreturn.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+#include <sys/stat.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -22,7 +22,7 @@
 
 /*
  * Il faudrait mettre la définition dans un fichier .h séparé pour mutualiser
- * avec philo.c
+ * avec table.c
  */
 
 #define MEMNAME "/table"
@@ -68,49 +68,69 @@ noreturn void raler(int syserr, const char *fmt, ...)
 
 void usage(char *prog)
 {
-    raler(0, "usage: %s nphilo", prog);
+    raler(0, "usage: %s nrepas", prog);
 }
 
 int main(int argc, char *argv[])
 {
-    int nphilo, fd, i;
+    int fd, i, moi, nrepas;
     off_t sz;
     struct mem *m;
+    struct stat stbuf;
 
     if (argc != 2)
         usage(argv[0]);
 
-    nphilo = atoi(argv[1]);
-    if (nphilo <= 0)
+    nrepas = atoi(argv[1]);
+    if (nrepas <= 0)
         usage(argv[0]);
 
-    sz = sizeof(struct mem) + nphilo * sizeof(sem_t);
+    CHK(fd = shm_open(MEMNAME, O_RDWR, 0));
+    CHK(fstat(fd, &stbuf));
+    sz = stbuf.st_size;
 
-    CHK(fd = shm_open(MEMNAME, O_RDWR | O_CREAT | O_TRUNC, 0666));
-    CHK(ftruncate(fd, sz));
     m = mmap(NULL, sz, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (m == MAP_FAILED)
         raler(1, "cannot mmap");
     CHK(close(fd)); // on n'a plus besoin de l'ouverture
 
-    m->nphilo = nphilo;
-    m->narrives = 0;
-    CHK(sem_init(&m->mtx, 1, 1));
-#if defined(TERMINAISON)
-    m->ntermines = 0;
-    CHK(sem_init(&m->fin, 1, 0));
+    CHK(sem_wait(&m->mtx));
+    moi = m->narrives++; // ++ sur var partagée => section critique
+    CHK(sem_post(&m->mtx));
+
+    moi %= m->nphilo; // pour pouvoir redémarrer les philosophes
+
+    for (i = 0; i < nrepas; i++)
+    {
+#if defined(INTERBLOCAGE)
+        CHK(sem_wait(&m->tabsem[moi]));
+        CHK(sem_wait(&m->tabsem[(moi + 1) % m->nphilo]));
+#else
+        if (moi == 0) // il suffit qu'un des philosophes soit droitier
+        {
+            CHK(sem_wait(&m->tabsem[(moi + 1) % m->nphilo]));
+            CHK(sem_wait(&m->tabsem[moi]));
+        }
+        else // alors que les autres sont gauchers
+        {
+            CHK(sem_wait(&m->tabsem[moi]));
+            CHK(sem_wait(&m->tabsem[(moi + 1) % m->nphilo]));
+        }
 #endif
+        printf("%d : je mange\n", moi);
+        fflush(stdout);
 
-    for (i = 0; i < nphilo; i++)
-        CHK(sem_init(&m->tabsem[i], 1, 1));
+        // les libérations n'ont pas besoin d'être ordonnées
+        CHK(sem_post(&m->tabsem[moi]));
+        CHK(sem_post(&m->tabsem[(moi + 1) % m->nphilo]));
+    }
 
 #if defined(TERMINAISON)
-    // attendre la fin : le dernier philosophe qui quitte la table
-    // doit nous réveiller
-    CHK(sem_wait(&m->fin));
-
-    CHK(munmap(m, sz));
-    CHK(shm_unlink(MEMNAME));
+    CHK(sem_wait(&m->mtx));
+    m->ntermines++;
+    if (m->ntermines == m->nphilo)
+        CHK(sem_post(&m->fin)); // réveiller la table
+    CHK(sem_post(&m->mtx));
 #endif
 
     exit(0);

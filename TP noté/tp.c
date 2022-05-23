@@ -48,9 +48,9 @@ raler(int syserr, const char *msg, ...)
 struct arg
 {
     char nom[MAXNOM]; // le nom du client
-    int duree;        // durÃ©e de la course en ms
-    int *occupes;     // le tableau des livreurs occupÃ©s
-    // TODO Ã  complÃ©ter
+    int duree;        // durée de la course en ms
+    int *occupes;     // le tableau des livreurs occupés
+    // TODO à  compléter
     int id;                // id du livreur
     pthread_cond_t cond;   // condition
     pthread_mutex_t mutex; // mutex
@@ -68,16 +68,16 @@ void *livreur(void *arg)
             pthread_cond_wait(&a->cond, &a->mutex);
         pthread_mutex_unlock(&a->mutex);
 
-        // dÃ©tecter la terminaison
+        // détecter la terminaison
         if (a->duree < 0)
             break;
 
-        // TODO modifier le message pour inclure le numÃ©ro du livreur
+        // TODO modifier le message pour inclure le numéro du livreur
         printf("Livreur %d : client %s pendant %d ms\n", a->id, a->nom, a->duree);
 
-        usleep(a->duree * 1000); // durÃ©e de la course en micro-secondes
+        usleep(a->duree * 1000); // durée de la course en micro-secondes
 
-        // TODO rÃ©veiller le thread principal quand on a fini
+        // TODO réveiller le thread principal quand on a fini
         pthread_mutex_lock(&a->mutex);
         a->nom[0] = '\0';
         a->duree = -1;
@@ -105,35 +105,35 @@ int main(int argc, char *argv[])
     int nthreads;     // nb de livreurs
     pthread_t *tid;   // tableau des identificateurs de threads
     struct arg *targ; // tableau des arguments
-    int *occupes;     // tableau des livreurs occupÃ©s
+    int *occupes;     // tableau des livreurs occupés
     int i;            // compte-tours de boucle
     int liv;          // un livreur disponible
-    int nval;         // nombre d'Ã©lÃ©ments lus par scanf
+    int nval;         // nombre d'élements lus par scanf
     char nom[MAXNOM]; // nom du client
-    int duree;        // durÃ©e de la course en ms
+    int duree;        // durée de la course en ms
 
     if (argc != 2 || (nthreads = atoi(argv[1])) <= 0)
         raler(0, "usage: %s nb-threads\n\tavec nb-threads > 0", argv[0]);
 
-    // calloc initialise toute la mÃ©moire Ã  0
+    // calloc initialise toute la mémoire Ã  0
     NCHK(tid = calloc(nthreads + 1, sizeof *tid));
     NCHK(occupes = calloc(nthreads, sizeof *occupes));
     NCHK(targ = calloc(nthreads + 1, sizeof *targ));
 
-    // CrÃ©er les threads livreurs
+    // Créer les threads livreurs
     for (i = 0; i < nthreads; i++)
     {
         targ[i].nom[0] = '\0'; // pas de course pour le moment
-        targ[i].duree = 0;     // pas vraiment nÃ©cessaire
+        targ[i].duree = 0;     // pas vraiment nécessaire
         targ[i].occupes = occupes;
-        // TODO Ã  complÃ©ter
+        // TODO Ã  compléter
         targ[i].id = i;
         TCHK(pthread_mutex_init(&targ[i].mutex, NULL));
         TCHK(pthread_cond_init(&targ[i].cond, NULL));
         TCHK(pthread_create(&tid[i], NULL, livreur, &targ[i]));
     }
 
-    // lire les courses Ã  effectuer et les affecter aux livreurs
+    // lire les courses à  effectuer et les affecter aux livreurs
     while ((nval = scanf("%s%d\n", nom, &duree)) == 2)
     {
         // Tests
@@ -142,16 +142,16 @@ int main(int argc, char *argv[])
         if (duree < 0)
             raler(0, "duree '%d' devrait Ãªtre >= 0", duree);
 
-        // TODO attendre qu'au moins un livreur soit prÃªt
+        // TODO attendre qu'au moins un livreur soit prêt
         pthread_mutex_lock(&targ[0].mutex);
         while ((liv = trouver_livreur_pret(occupes, nthreads)) == -1)
             pthread_cond_wait(&targ[0].cond, &targ[0].mutex);
         pthread_mutex_unlock(&targ[0].mutex);
 
         printf("Course %s (duree = %d) -> livreur %d\n", nom, duree, liv);
-        occupes[liv] = 1; // occupÃ© => ne pas rÃ©utiliser tout de suite
+        occupes[liv] = 1; // occupé => ne pas réutiliser tout de suite
 
-        // TODO donner la course au livreur trouvÃ© et le rÃ©veiller
+        // TODO donner la course au livreur trouvé et le réveiller
         pthread_mutex_lock(&targ[liv].mutex);
         strcpy(targ[liv].nom, nom);
         targ[liv].duree = duree;
@@ -162,16 +162,16 @@ int main(int argc, char *argv[])
     if (nval != EOF)
         raler(0, "mauvais format pour <nom, duree>");
 
-    // prÃ©venir tous les livreurs qu'ils doivent s'arrÃªter
+    // prévenir tous les livreurs qu'ils doivent s'arrÃªter
     for (i = 0; i < nthreads; i++)
     {
-        // TODO le livreur i est-il occupÃ© ? si oui, attendre
+        // TODO le livreur i est-il occupé ? si oui, attendre
         pthread_mutex_lock(&targ[i].mutex);
         while (occupes[i])
             pthread_cond_wait(&targ[i].cond, &targ[i].mutex);
         pthread_mutex_unlock(&targ[i].mutex);
 
-        // TODO prÃ©venir le livreur i qu'il doit s'arrÃªter
+        // TODO prévenir le livreur i qu'il doit s'arrÃªter
         pthread_mutex_lock(&targ[i].mutex);
         strcpy(targ[i].nom, "bidon");
         targ[i].duree = -1;

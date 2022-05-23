@@ -103,7 +103,8 @@ raz
 ./vendeur PROD1 -1              2> $TMP.verr && fail "quantite < 0"
 [ -f PROD1 ]                                 && fail "PROD1 créé"
 echo OK
-
+rm -r -f /dev/shm/sem.*
+rm -r -f /dev/shm/sem.*
 ##############################################################################
 
 echo -n "Test 1.2 - Syntaxe de client......................................."
@@ -112,14 +113,16 @@ raz
 ./client PROD1 5 toto           2> $TMP.cerr && fail "3 arguments"
 ./client PROD1 0 PROD2 5        2> $TMP.cerr && fail "quantité = 0"
 echo OK
-
+rm -r -f /dev/shm/sem.*
+rm -r -f /dev/shm/sem.*
 ##############################################################################
 
 echo -n "Test 1.3 - Tentative de fermer un étal inexistant.................."
 raz
 ./vendeur PROD1 0               2> $TMP.verr && fail "1 argument"
 echo OK
-
+rm -r -f /dev/shm/sem.*
+rm -r -f /dev/shm/sem.*
 ##############################################################################
 
 echo -n "Test 2.1 - Fonctionnalité basique.................................."
@@ -149,7 +152,8 @@ ps_existe $PID "Le troisième client devrait être en train d'attendre"
 
 
 echo OK
-
+rm -r -f /dev/shm/sem.*
+rm -r -f /dev/shm/sem.*
 ##############################################################################
 
 echo -n "Test 2.2 - Fonctionnalité basique avec ajout de produits..........."
@@ -184,7 +188,8 @@ wait $PID                              || fail "erreur client 3, cf $TMP.cerr3"
 # et on s'arrête comme des malpropres
 
 echo OK
-
+rm -r -f /dev/shm/sem.*
+rm -r -f /dev/shm/sem.*
 ##############################################################################
 
 echo -n "Test 2.3 - Fonctionnalité basique avec plusieurs vendeurs.........."
@@ -239,6 +244,7 @@ wait $PID4                            || fail "erreur client 4, cf $TMP.cerr4"
 # et on s'arrête comme des malpropres
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 ##############################################################################
 
@@ -274,6 +280,7 @@ wait $PID                             && fail "le 3e client devrait exit(1)"
 
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 ##############################################################################
 
@@ -314,6 +321,7 @@ do
 done
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 ##############################################################################
 
@@ -361,6 +369,7 @@ wait $PID3                            || fail "le client 3 devrait exit(0)"
 
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 ##############################################################################
 
@@ -391,6 +400,7 @@ ps_termine $PID "Le client numéro $((N+1)) devrait être terminé"
 wait $PID                             || fail "client $((N+1)) en erreur"
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 ##############################################################################
 
@@ -423,6 +433,7 @@ done
 
 
 echo OK
+rm -r -f /dev/shm/sem.*
 
 raz
 exit 0
